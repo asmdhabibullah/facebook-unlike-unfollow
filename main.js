@@ -1,30 +1,60 @@
-function friendUnfriendOrUnfollow(friendsDiv = '"]', callback = function (unfollowButtons = '') { }) {
+// New Implementation
 
-    const start = new Date().getTime();
+async function friendUnfriendOrUnfollow(friendsDiv = '', callback = function (unfollowButtons = '') { }) {
 
-    const friends = document.querySelectorAll(friendsDiv);
+    let totalScroll = 0;
+    let totalScrollTime = 0;
 
-    console.log("For loop is calling");
-    for (let fnd = 0; fnd < friends.length; fnd++) {
+    const scroll = setInterval(() => {
 
-        friends[fnd].click();
+        const startScroll = new Date().getTime();
+        window.scrollTo(0, 100000);
+        totalScroll = totalScroll + 1;
+        const endScroll = new Date().getTime();
 
-    };
+        totalScrollTime = totalScrollTime + (endScroll - startScroll)
 
-    console.log("For loop finish exicution!");
+    }, 1000 * 3);
 
-    const end = new Date().getTime();
+    clearInterval(scroll);
 
-    const times = end - start;
+    const friendsClickIntervals = setInterval(() => {
+        if (totalScroll === 10) {
 
-    setTimeout(function () {
-        console.log(`Callback func will call after the second of: ${times}`);
-        callback(unfollowButtons)
-    }, times)
+            const friends = document.querySelectorAll(friendsDiv);
+
+            console.log("For loop is calling");
+
+            for (let fnd = 0; fnd < friends.length; fnd++) {
+
+                friends[fnd].click();
+
+            };
+
+            console.log("For loop finish exicution!");
+
+            totalScroll = 0;
+        }
+
+    }, 1000)
+
+
+    clearInterval(friendsClickIntervals);
+
+    await new Promise(resolve => setTimeout(() => {
+        console.log(`Callback func will call after the second of: ${13000}`);
+
+        callback(unfollowButtons);
+
+        resolve("OK")
+
+    }, 1000 * 14));
 
 };
 
-function unfollowButtonClick(unfollowButtons) {
+
+
+friendUnfriendOrUnfollow('div[aria-label="Friends"]', function (unfollowButtons = 'div[role="menuitem"] span[dir="auto"]') {
 
     const unfollowBtns = document.querySelectorAll(unfollowButtons);
 
@@ -36,6 +66,5 @@ function unfollowButtonClick(unfollowButtons) {
             unfollowBtns[btn].click();
         };
     };
-}
+});
 
-friendUnfriendOrUnfollow('div[aria-label="Friends"]', unfollowButtonClick('div[role="menuitem"] span[dir="auto"]'));
