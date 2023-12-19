@@ -1,54 +1,131 @@
 // New Implementation
 
-function friendButtonClick(unfriendOrUnfollow ='', friendsButton = '', unfriendOrUnfollowButtons = '' ) {
 
-    console.log("I'm calling now...");
+async function friendButtonClick(friendsButton = '') {
 
-    const friends = document.querySelectorAll(unfriendOrUnfollow, friendsButton, unfriendOrUnfollowButtons); // Might be replaceable
+    return new Promise((res, rej) => {
+        
+        let clicked = false;
 
+        const friends = document.querySelectorAll(friendsButton); // Might be replaceable
+        
+        console.log("I'm calling now to click the ... button for the dropdown menu!");
     
-    for (let fnd = 0; fnd < friends.length; fnd++) {
-        
-        friends[fnd].click();
-        
-        console.log("Clicking for unfollow button show");
+        for (let fnd = 0; fnd < friends.length; fnd++) {
 
-        setTimeout(() => {
-            
-            const unfollowBtns = document.querySelectorAll(unfriendOrUnfollowButtons);
-            
-            console.log("Unfrien or unfollow button clicking soon!");
-            
-            for (let btn = 0; btn <= unfollowBtns.length; btn++) {
+            friends[fnd].click();
+    
+            clicked = true;
+        };
 
-                let text = unfollowBtns[btn].textContent
+        return res(clicked)
 
-                if (text === "Unfollow") {
-                    unfollowBtns[btn].click();
-                    friends[fnd].click();
-                };
-
-            };
-      }, 1000)
-
-    }
+    });
 
 };
 
+async function unfriendOrUnfollowButtonsClick(unfriendOrUnfollowButtons='') {
+
+    return new Promise((res, rej) => {
+
+        console.log("Clicking for unfollow button show");
+
+        const unfollowBtns = document.querySelectorAll(unfriendOrUnfollowButtons);
+
+        console.log("Unfrien or unfollow button clicking soon!");
+
+        for (let btn = 0; btn <= unfollowBtns.length; btn++) {
+
+            let text = unfollowBtns[btn].textContent
+
+            if (unfollowBtns && text === "Unfollow") {
+                unfollowBtns[btn].click();
+                console.log("Unfrien or unfollow button found and clicked!");
+            } else {
+                console.log("Unfrien or unfollow button not found!");
+            };
+
+        };
+
+        return res('Unfollowed!');
+    });
+
+}
+
+async function windowScrollDown() { 
+    return new Promise((res, rej) => {
+        // Scroll to down
+        window.scrollTo(0, 100000);
+        res('Scrolled!')
+   })
+}
 
 function startIntervalToFindFriends() {
 
-    setInterval(function () {
+    setInterval(async function () {
         
-        window.scrollTo(0, 100000);
-        
-        friendButtonClick("unfollow", 'div[aria-label="Friends"]', 'div[role="menuitem"] span[dir="auto"]');
+        await windowScrollDown();
+
+        await friendButtonClick('div[aria-label="Friends"]');
+
+        await unfriendOrUnfollowButtonsClick('div[role="menuitem"] span[dir="auto"]');
         
     }, 24000);
 
 };
 
 startIntervalToFindFriends();
+
+
+// function friendButtonClick(unfriendOrUnfollow ='', friendsButton = '', unfriendOrUnfollowButtons = '' ) {
+
+//     console.log("I'm calling now...");
+
+//     const friends = document.querySelectorAll(unfriendOrUnfollow, friendsButton, unfriendOrUnfollowButtons); // Might be replaceable
+
+    
+//     for (let fnd = 0; fnd < friends.length; fnd++) {
+        
+//         friends[fnd].click();
+        
+//         console.log("Clicking for unfollow button show");
+
+//         setTimeout(() => {
+            
+//             const unfollowBtns = document.querySelectorAll(unfriendOrUnfollowButtons);
+            
+//             console.log("Unfrien or unfollow button clicking soon!");
+            
+//             for (let btn = 0; btn <= unfollowBtns.length; btn++) {
+
+//                 let text = unfollowBtns[btn].textContent
+
+//                 if (text === "Unfollow") {
+//                     unfollowBtns[btn].click();
+//                     friends[fnd].click();
+//                 };
+
+//             };
+//       }, 1000)
+
+//     }
+
+// };
+
+
+// function startIntervalToFindFriends() {
+
+//     setInterval(function () {
+        
+//         window.scrollTo(0, 100000);
+        
+//         friendButtonClick("unfollow", 'div[aria-label="Friends"]', 'div[role="menuitem"] span[dir="auto"]');
+        
+//     }, 24000);
+
+// };
+
+// startIntervalToFindFriends();
 
 
 // function timeToUnfriendOrUnfollowFbFriends(unfriendOrUnfollow, friendsButton, unfriendOrUnfollowButtons) {
